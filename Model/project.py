@@ -33,26 +33,36 @@ class Project:
         cmd = Delete(self, fragment_index)
         cmd.do()
         self.done_stack.append(cmd)
+        if len(self.done_stack) > 5:
+            del self.done_stack[0]
 
     def change_speed(self, fragment_index, speed_ratio):
         cmd = ChangeSpeed(self, fragment_index, speed_ratio)
         cmd.do()
         self.done_stack.append(cmd)
+        if len(self.done_stack) > 5:
+            del self.done_stack[0]
 
     def trim(self, fragment_index, start, end):
         cmd = Trim(self, fragment_index, int(start), int(end))
         cmd.do()
         self.done_stack.append(cmd)
+        if len(self.done_stack) > 5:
+            del self.done_stack[0]
 
     def concat(self, fragment1, fragment2):
         cmd = Concat(self, fragment1, fragment2)
         cmd.do()
         self.done_stack.append(cmd)
+        if len(self.done_stack) > 5:
+            del self.done_stack[0]
 
     def import_file(self, path):
         cmd = ImportFile(self, path=path)
         cmd.do()
         self.done_stack.append(cmd)
+        if len(self.done_stack) > 5:
+            del self.done_stack[0]
 
     def up(self, fragment_index):
         if fragment_index != 0:
@@ -60,17 +70,23 @@ class Project:
             cmd = Down(self, fragment_to_down_index)
             cmd.do()
             self.done_stack.append(cmd)
+            if len(self.done_stack) > 5:
+                del self.done_stack[0]
 
     def down(self, fragment_index):
         if fragment_index != len(self.active_fragments) - 1:
             cmd = Down(self, fragment_index)
             cmd.do()
             self.done_stack.append(cmd)
+            if len(self.done_stack) > 5:
+                del self.done_stack[0]
 
     def clone(self, fragment_index):
         cmd = Clone(self, fragment_index)
         cmd.do()
         self.done_stack.append(cmd)
+        if len(self.done_stack) > 5:
+            del self.done_stack[0]
 
     def export_as_file(self, path):
         ffmeg_editor.concat([x.content for x in self.active_fragments], path[1:])
@@ -81,6 +97,9 @@ class Project:
         cmd = self.done_stack.pop()
         cmd.undo()
         self.undone_stack.append(cmd)
+        print(len(self.undone_stack))
+        if len(self.undone_stack) > 5:
+            del self.undone_stack[0]
 
     def redo(self):
         if len(self.undone_stack) == 0:
@@ -88,6 +107,9 @@ class Project:
         cmd = self.undone_stack.pop()
         cmd.do()
         self.done_stack.append(cmd)
+        print(len(self.done_stack))
+        if len(self.done_stack) > 5:
+            del self.done_stack[0]
 
     @staticmethod
     def unpack(pack_array, name, path):

@@ -12,4 +12,5 @@ if __name__ == "__main__":
     window = MainWindow(session)
     window.show()
 
-    app.exec()
+    sys.exit(app.exec_())
+    app.close()
